@@ -40,18 +40,19 @@ public class DetailActivity extends AppCompatActivity {
             // 3. Menampilkan data ke UI
             tvJudul.setText(film.getJudul());
             tvKategori.setText(film.getKategori());
-            tvRating.setText("⭐ " + film.getSkorRating());
+            // Menggunakan getter snake_case sesuai dengan model Film terbaru (Tugas Andika)
+            tvRating.setText("⭐ " + film.getSkor_rating());
             tvRingkasan.setText(film.getRingkasan());
 
             // Menggunakan library Glide untuk memuat gambar dari URL ke ImageView
             Glide.with(this)
-                    .load(film.getGambarSampul())
+                    .load(film.getGambar_sampul())
                     .placeholder(android.R.drawable.ic_menu_gallery) // Gambar sementara saat loading
                     .into(imgSampul);
 
             // 4. Logika klik tombol Trailer (Membuka browser atau YouTube)
             btnTrailer.setOnClickListener(v -> {
-                String trailerUrl = film.getUrlTrailer();
+                String trailerUrl = film.getUrl_trailer();
                 if (trailerUrl != null && !trailerUrl.isEmpty()) {
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(trailerUrl));
                     startActivity(browserIntent);
