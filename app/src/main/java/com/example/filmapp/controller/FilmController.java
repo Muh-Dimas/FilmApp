@@ -6,11 +6,11 @@ import android.os.Looper;
 import com.example.filmapp.model.Film;
 import com.example.filmapp.network.ApiClient;
 import com.example.filmapp.network.FilmCallback;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,8 +21,8 @@ import okhttp3.Response;
 public class FilmController {
 
     private ApiClient apiClient;
-    // Handler untuk kembali ke Main Thread (UI thread)
     private Handler mainHandler = new Handler(Looper.getMainLooper());
+    private Gson gson = new Gson();
 
     public FilmController() {
         apiClient = ApiClient.getInstance();
@@ -33,7 +33,6 @@ public class FilmController {
         apiClient.getAllFilm(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                // Kembalikan error ke UI thread
                 mainHandler.post(() ->
                         filmCallback.onFailure("Gagal koneksi: " + e.getMessage())
                 );
@@ -49,11 +48,17 @@ public class FilmController {
                 }
 
                 String jsonString = response.body().string();
-                List<Film> filmList = parseFilmList(jsonString);
 
-                // Kembalikan data ke UI thread
+                // GSON parse otomatis JSON → List<Film>
+                Type listType = new TypeToken<List<Film>>(){}.getType();
+                List<Film> filmList = gson.fromJson(jsonString, listType);
+
+                // Kalau hasil null, kirim list kosong
+                if (filmList == null) filmList = new ArrayList<>();
+
+                List<Film> finalFilmList = filmList;
                 mainHandler.post(() ->
-                        filmCallback.onSuccess(filmList)
+                        filmCallback.onSuccess(finalFilmList)
                 );
             }
         });
@@ -79,68 +84,18 @@ public class FilmController {
                 }
 
                 String jsonString = response.body().string();
+
+                // GSON parse satu objek Film
+                Film film = gson.fromJson(jsonString, Film.class);
+
                 List<Film> filmList = new ArrayList<>();
+                if (film != null) filmList.add(film);
 
-                try {
-                    JSONObject obj = new JSONObject(jsonString);
-                    Film film = parseFilm(obj);
-                    filmList.add(film);
-                } catch (Exception e) {
-                    mainHandler.post(() ->
-                            filmCallback.onFailure("Gagal parse data: " + e.getMessage())
-                    );
-                    return;
-                }
-
+                List<Film> finalFilmList = filmList;
                 mainHandler.post(() ->
-                        filmCallback.onSuccess(filmList)
+                        filmCallback.onSuccess(finalFilmList)
                 );
             }
         });
-    }
-
-    // Parse JSONArray → List<Film>
-    private List<Film> parseFilmList(String jsonString) {
-        List<Film> filmList = new ArrayList<>();
-        try {
-            JSONArray jsonArray = new JSONArray(jsonString);
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject obj = jsonArray.getJSONObject(i);
-                filmList.add(parseFilm(obj));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return filmList;
-    }
-
-    // Parse satu JSONObject → Film
-    // Perhatian: skor_rating di API bisa String atau int!
-    private Film parseFilm(JSONObject obj) throws Exception {
-        String id = obj.getString("id");
-        String judul = obj.getString("judul");
-        String ringkasan = obj.getString("ringkasan");
-        String gambarPoster = obj.getString("gambar_poster");
-        String gambarSampul = obj.getString("gambar_sampul");
-        long tanggalRilis = obj.getLong("tanggal_rilis");
-        String kategori = obj.getString("kategori");
-        String urlTrailer = obj.getString("url_trailer");
-
-        // Handle skor_rating yang bisa String atau int
-        int skorRating = 0;
-        try {
-            skorRating = obj.getInt("skor_rating");
-        } catch (Exception e) {
-            String skorStr = obj.getString("skor_rating");
-            try {
-                skorRating = Integer.parseInt(skorStr);
-            } catch (Exception ex) {
-                skorRating = 0;
-            }
-        }
-
-        return new Film(id, judul, ringkasan, gambarPoster,
-                gambarSampul, tanggalRilis, skorRating,
-                kategori, urlTrailer);
     }
 }
