@@ -4,16 +4,12 @@ plugins {
 
 android {
     namespace = "com.example.filmapp"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.filmapp"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -36,9 +32,11 @@ android {
 }
 
 dependencies {
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
+    
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.google.code.gson:gson:2.10.1")
-    implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)

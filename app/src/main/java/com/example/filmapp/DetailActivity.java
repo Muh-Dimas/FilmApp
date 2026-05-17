@@ -8,6 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.example.filmapp.model.Film;
 
 /**
@@ -33,24 +35,24 @@ public class DetailActivity extends AppCompatActivity {
         btnTrailer = findViewById(R.id.btnTrailer);
 
         // 2. Mengambil data Film yang dikirim dari Intent (MainActivity/Adapter)
-        // Kita menggunakan Serializable karena di Film.java sudah ditambahkan implements Serializable
         Film film = (Film) getIntent().getSerializableExtra("EXTRA_FILM");
 
         if (film != null) {
             // 3. Menampilkan data ke UI
             tvJudul.setText(film.getJudul());
             tvKategori.setText(film.getKategori());
-            // Menggunakan getter snake_case sesuai dengan model Film terbaru (Tugas Andika)
             tvRating.setText("⭐ " + film.getSkor_rating());
             tvRingkasan.setText(film.getRingkasan());
 
-            // Menggunakan library Glide untuk memuat gambar dari URL ke ImageView
+            // Implementasi Glide Berantai (Chaining) untuk Gambar Sampul
             Glide.with(this)
                     .load(film.getGambar_sampul())
-                    .placeholder(android.R.drawable.ic_menu_gallery) // Gambar sementara saat loading
+                    .placeholder(android.R.drawable.ic_menu_gallery) // Placeholder bawaan Android
+                    .error(android.R.drawable.stat_notify_error)    // Error bawaan Android
+                    .transform(new CenterCrop(), new RoundedCorners(24)) // Estetika: Sudut Melengkung
                     .into(imgSampul);
 
-            // 4. Logika klik tombol Trailer (Membuka browser atau YouTube)
+            // 4. Logika klik tombol Trailer
             btnTrailer.setOnClickListener(v -> {
                 String trailerUrl = film.getUrl_trailer();
                 if (trailerUrl != null && !trailerUrl.isEmpty()) {
