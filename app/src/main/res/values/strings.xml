@@ -1,3 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">FilmApp</string>
+    <string name="app_name">CineStream</string>
+    <string name="landing_title">Nikmati Film\nFavorit Kamu</string>
+    <string name="landing_subtitle">Streaming film premium dengan kualitas terbaik, kapan saja dan di mana saja.</string>
+    <string name="btn_get_started">Mulai Sekarang</string>
+    <string name="btn_login">Masuk</string>
+    <string name="btn_register">Daftar</string>
+    <string name="login_title">Selamat Datang</string>
+    <string name="login_subtitle">Masuk ke akun kamu</string>
+    <string name="register_title">Buat Akun</string>
+    <string name="register_subtitle">Bergabung sekarang gratis</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_name">Nama Lengkap</string>
+    <string name="hint_confirm_password">Konfirmasi Password</string>
+    <string name="nav_home">Beranda</string>
+    <string name="nav_clips">Klip</string>
+    <string name="nav_favorites">Favorit</string>
+    <string name="nav_settings">Setting</string>
+    <string name="home_greeting">Halo, Selamat Datang 👋</string>
+    <string name="home_subtitle">Mau nonton apa hari ini?</string>
+    <string name="section_trending">Trending Sekarang</string>
+    <string name="section_popular">Film Populer</string>
+    <string name="section_new">Terbaru</string>
+    <string name="search_hint">Cari film, series…</string>
+    <string name="no_favorites">Belum ada favorit</string>
+    <string name="settings_account">Akun</string>
+    <string name="settings_appearance">Tampilan</string>
+    <string name="settings_notifications">Notifikasi</string>
+    <string name="settings_quality">Kualitas Video</string>
+    <string name="settings_logout">Keluar</string>
 </resources>

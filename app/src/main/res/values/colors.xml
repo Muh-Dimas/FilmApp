@@ -1,5 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <!-- Background -->
+    <color name="bg_dark">#0A0E1A</color>
+    <color name="bg_dark_secondary">#0D1526</color>
+    <color name="bg_card">#111827</color>
+
+    <!-- Teal Primary -->
+    <color name="teal_primary">#00BCD4</color>
+    <color name="teal_light">#4DD0E1</color>
+    <color name="teal_dark">#00838F</color>
+    <color name="teal_accent">#00E5FF</color>
+
+    <!-- Glass -->
+    <color name="glass_bg">#1A2A3A</color>
+    <color name="glass_border">#2A4A5A</color>
+    <color name="glass_overlay">#80FFFFFF</color>
+
+    <!-- Text -->
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#B0C4D8</color>
+    <color name="text_muted">#6B8A9A</color>
+    <color name="text_teal">#00BCD4</color>
+
+    <!-- Status -->
+    <color name="color_error">#FF5252</color>
+    <color name="color_success">#00E676</color>
+    <color name="color_warning">#FFD740</color>
+
+    <!-- Bottom Nav -->
+    <color name="nav_selected">#00BCD4</color>
+    <color name="nav_unselected">#4A6A7A</color>
+    <color name="nav_bg">#0D1E2E</color>
+
+    <!-- Transparent -->
+    <color name="transparent">#00000000</color>
+    <color name="semi_transparent">#80000000</color>
+    <color name="glass_white">#1AFFFFFF</color>
 </resources>
