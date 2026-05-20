@@ -6,17 +6,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import com.example.filmapp.R;
+
+import com.bumptech.glide.Glide;
 import com.example.filmapp.databinding.FragmentHomeBinding;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
     private MovieRepository repository;
+    private FilmAdapter trendingAdapter, popularAdapter, newAdapter;
+    private static final int MAX_RETRY = 3;
+    private int retryCount = 0;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -32,42 +40,145 @@ public class HomeFragment extends Fragment {
         setupAnimations();
         setupRecyclerViews();
         setupClickListeners();
+        loadData();
     }
 
     private void setupAnimations() {
-        binding.getRoot().startAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.fade_in));
+        binding.getRoot().startAnimation(
+                AnimationUtils.loadAnimation(requireContext(), R.anim.fade_in));
     }
 
     private void setupRecyclerViews() {
-        LinearLayoutManager horizontalLayout = new LinearLayoutManager(
-                requireContext(), LinearLayoutManager.HORIZONTAL, false);
-        LinearLayoutManager horizontalLayout2 = new LinearLayoutManager(
-                requireContext(), LinearLayoutManager.HORIZONTAL, false);
-        LinearLayoutManager horizontalLayout3 = new LinearLayoutManager(
-                requireContext(), LinearLayoutManager.HORIZONTAL, false);
+        trendingAdapter = new FilmAdapter(new ArrayList<>(), movie -> openDetail(movie));
+        popularAdapter  = new FilmAdapter(new ArrayList<>(), movie -> openDetail(movie));
+        newAdapter      = new FilmAdapter(new ArrayList<>(), movie -> openDetail(movie));
 
-        MovieAdapter trendingAdapter = new MovieAdapter(repository.getTrendingMovies(), movie -> openDetail(movie));
-        MovieAdapter popularAdapter = new MovieAdapter(repository.getPopularMovies(), movie -> openDetail(movie));
-        MovieAdapter newAdapter = new MovieAdapter(repository.getNewReleases(), movie -> openDetail(movie));
-
-        binding.rvTrending.setLayoutManager(horizontalLayout);
+        binding.rvTrending.setLayoutManager(
+                new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
         binding.rvTrending.setAdapter(trendingAdapter);
 
-        binding.rvPopular.setLayoutManager(horizontalLayout2);
+        binding.rvPopular.setLayoutManager(
+                new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
         binding.rvPopular.setAdapter(popularAdapter);
 
-        binding.rvNewRelease.setLayoutManager(horizontalLayout3);
+        binding.rvNewRelease.setLayoutManager(
+                new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
         binding.rvNewRelease.setAdapter(newAdapter);
     }
 
-    private void setupClickListeners() {
-        binding.btnSearch.setOnClickListener(v ->
-                startActivity(new Intent(requireContext(), SearchActivity.class))
-        );
+    private void loadData() {
+        List<Movie> cached = repository.getAllMovies();
+        if (!cached.isEmpty()) {
+            populateAdapters();
+            return;
+        }
 
+        showLoading(true);
+        showRetry(false);
+        retryCount = 0;
+        loadFromApi();
+    }
+
+    private void loadFromApi() {
+        repository.loadFromApi(new MovieRepository.OnMoviesLoadedListener() {
+            @Override
+            public void onLoaded(List<Movie> movies) {
+                if (getActivity() == null || binding == null) return;
+                showLoading(false);
+                retryCount = 0;
+                populateAdapters();
+            }
+
+            @Override
+            public void onError(String message) {
+                if (getActivity() == null || binding == null) return;
+                if (retryCount < MAX_RETRY) {
+                    retryCount++;
+                    loadFromApi();
+                } else {
+                    showLoading(false);
+                    showRetry(true);
+                }
+            }
+        });
+    }
+
+    private void populateAdapters() {
+        trendingAdapter.updateData(repository.getTrendingMovies());
+        popularAdapter.updateData(repository.getPopularMovies());
+        newAdapter.updateData(repository.getNewReleases());
+
+        Movie featured = repository.getFeaturedMovie();
+        if (featured != null) {
+            binding.tvFeaturedTitle.setText(featured.getTitle());
+            binding.tvFeaturedRating.setText("⭐ " + featured.getRating());
+            binding.tvFeaturedGenre.setText(featured.getGenre());
+            Glide.with(this)
+                    .load(featured.getGambarSampul() != null
+                            ? featured.getGambarSampul()
+                            : featured.getPosterUrl())
+                    .centerCrop()
+                    .into(binding.imgFeatured);
+        }
+    }
+
+    private void showLoading(boolean show) {
+        if (binding == null) return;
+        binding.loadingProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+    }
+
+    private void showRetry(boolean show) {
+        if (binding == null) return;
+        binding.btnRetry.setVisibility(show ? View.VISIBLE : View.GONE);
+        if (show) {
+            binding.btnRetry.setOnClickListener(v -> {
+                showRetry(false);
+                showLoading(true);
+                retryCount = 0;
+                loadFromApi();
+            });
+        }
+    }
+
+    private void setupClickListeners() {
+        // Tombol search
+        binding.btnSearch.setOnClickListener(v ->
+                startActivity(new Intent(requireContext(), SearchActivity.class)));
+
+        // Tombol play featured banner
         binding.btnPlayFeatured.setOnClickListener(v -> {
             Movie featured = repository.getFeaturedMovie();
-            openDetail(featured);
+            if (featured != null) openDetail(featured);
+        });
+
+        // Klik gambar featured banner
+        binding.cardFeatured.setOnClickListener(v -> {
+            Movie featured = repository.getFeaturedMovie();
+            if (featured != null) openDetail(featured);
+        });
+
+        // Lihat Semua — Trending
+        binding.tvSeeAllTrending.setOnClickListener(v -> {
+            Intent intent = new Intent(requireContext(), AllMoviesActivity.class);
+            intent.putExtra(AllMoviesActivity.EXTRA_FILTER, "trending");
+            intent.putExtra(AllMoviesActivity.EXTRA_TITLE, "Trending Sekarang");
+            startActivity(intent);
+        });
+
+        // Lihat Semua — Popular
+        binding.tvSeeAllPopular.setOnClickListener(v -> {
+            Intent intent = new Intent(requireContext(), AllMoviesActivity.class);
+            intent.putExtra(AllMoviesActivity.EXTRA_FILTER, "popular");
+            intent.putExtra(AllMoviesActivity.EXTRA_TITLE, "Film Populer");
+            startActivity(intent);
+        });
+
+        // Lihat Semua — New Release
+        binding.tvSeeAllNew.setOnClickListener(v -> {
+            Intent intent = new Intent(requireContext(), AllMoviesActivity.class);
+            intent.putExtra(AllMoviesActivity.EXTRA_FILTER, "new");
+            intent.putExtra(AllMoviesActivity.EXTRA_TITLE, "Terbaru");
+            startActivity(intent);
         });
     }
 

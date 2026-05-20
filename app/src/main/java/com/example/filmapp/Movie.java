@@ -12,6 +12,8 @@ public class Movie {
     private int episodeCount;
     private boolean isFavorite;
     private boolean isDownloaded;
+    private String urlTrailer;
+    private String gambarSampul;
 
     public Movie(String id, String title, String genre, String rating,
                  String year, String duration, String posterUrl,
@@ -42,4 +44,8 @@ public class Movie {
     public void setFavorite(boolean favorite) { isFavorite = favorite; }
     public boolean isDownloaded() { return isDownloaded; }
     public void setDownloaded(boolean downloaded) { isDownloaded = downloaded; }
+    public String getUrlTrailer() { return urlTrailer; }
+    public void setUrlTrailer(String urlTrailer) { this.urlTrailer = urlTrailer; }
+    public String getGambarSampul() { return gambarSampul; }
+    public void setGambarSampul(String gambarSampul) { this.gambarSampul = gambarSampul; }
 }

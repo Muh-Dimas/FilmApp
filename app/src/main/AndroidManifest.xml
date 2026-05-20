@@ -35,7 +35,7 @@
 
         <activity
             android:name="com.example.filmapp.PlayerActivity"
-            android:screenOrientation="landscape"
+            android:screenOrientation="portrait"
             android:configChanges="orientation|screenSize" />
 
         <activity
@@ -44,6 +44,10 @@
 
         <activity
             android:name=".MovieDetailActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".AllMoviesActivity"
             android:screenOrientation="portrait" />
 
     </application>

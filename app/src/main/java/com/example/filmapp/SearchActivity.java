@@ -13,7 +13,7 @@ public class SearchActivity extends AppCompatActivity {
 
     private ActivitySearchBinding binding;
     private MovieRepository repository;
-    private MovieAdapter adapter;
+    private FilmAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +31,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView() {
-        adapter = new MovieAdapter(repository.getAllMovies(), movie -> {});
+        adapter = new FilmAdapter(repository.getAllMovies(), movie -> {});
         binding.rvSearchResults.setLayoutManager(new GridLayoutManager(this, 2));
         binding.rvSearchResults.setAdapter(adapter);
     }

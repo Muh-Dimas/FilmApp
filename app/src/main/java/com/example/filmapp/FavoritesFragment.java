@@ -41,7 +41,7 @@ public class FavoritesFragment extends Fragment {
             binding.rvFavorites.setVisibility(View.VISIBLE);
             binding.tvCount.setText(favorites.size() + " film tersimpan");
 
-            MovieAdapter adapter = new MovieAdapter(favorites, movie -> {});
+            FilmAdapter adapter = new FilmAdapter(favorites, movie -> {});
             binding.rvFavorites.setLayoutManager(new GridLayoutManager(requireContext(), 2));
             binding.rvFavorites.setAdapter(adapter);
         }

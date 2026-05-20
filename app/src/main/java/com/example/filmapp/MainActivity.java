@@ -5,14 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
-
-import com.example.filmapp.R;
 import com.example.filmapp.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
-    private NavController navController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,15 +17,11 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        setupNavigation();
-    }
-
-    private void setupNavigation() {
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_fragment);
 
         if (navHostFragment != null) {
-            navController = navHostFragment.getNavController();
+            NavController navController = navHostFragment.getNavController();
             NavigationUI.setupWithNavController(binding.bottomNav, navController);
         }
     }
