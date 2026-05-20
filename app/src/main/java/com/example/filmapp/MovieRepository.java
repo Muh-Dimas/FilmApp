@@ -24,7 +24,7 @@ public class MovieRepository {
                 film.getSkorRating(),
                 film.getTanggalRilis(),
                 "",
-                film.getGambarPoster(),
+                film.getGambarPoster(),   // ← getter sudah cocok dengan Film.java
                 film.getRingkasan(),
                 0
         );
@@ -63,15 +63,16 @@ public class MovieRepository {
         });
     }
 
-    public List<Movie> getAllMovies() {
-        return new ArrayList<>(cachedMovies);
+    // Hapus cache agar HomeFragment reload dari API setelah add film
+    public static void clearCache() {
+        cachedMovies.clear();
     }
+
+    public List<Movie> getAllMovies()  { return new ArrayList<>(cachedMovies); }
 
     public List<Clip> getAllClips() {
         List<Clip> clips = new ArrayList<>();
-        for (Movie movie : cachedMovies) {
-            clips.add(Clip.fromMovie(movie));
-        }
+        for (Movie movie : cachedMovies) clips.add(Clip.fromMovie(movie));
         return clips;
     }
 
@@ -84,8 +85,7 @@ public class MovieRepository {
     }
 
     public Movie getFeaturedMovie() {
-        if (cachedMovies.isEmpty()) return null;
-        return cachedMovies.get(0);
+        return cachedMovies.isEmpty() ? null : cachedMovies.get(0);
     }
 
     public List<Movie> getTrendingMovies() {
@@ -97,17 +97,16 @@ public class MovieRepository {
 
     public List<Movie> getPopularMovies() {
         List<Movie> sorted = new ArrayList<>(cachedMovies);
-        sorted.sort((a, b) -> {
-            double rA = parseRatingSafe(a.getRating());
-            double rB = parseRatingSafe(b.getRating());
-            return Double.compare(rB, rA);
-        });
+        sorted.sort((a, b) -> Double.compare(
+                parseRatingSafe(b.getRating()),
+                parseRatingSafe(a.getRating())
+        ));
         return sorted.size() > 10 ? new ArrayList<>(sorted.subList(0, 10)) : sorted;
     }
 
     public List<Movie> getNewReleases() {
         List<Movie> result = new ArrayList<>();
-        int size = cachedMovies.size();
+        int size  = cachedMovies.size();
         int start = Math.max(0, size - 10);
         for (int i = start; i < size; i++) result.add(cachedMovies.get(i));
         return result;

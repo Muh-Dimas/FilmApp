@@ -1,12 +1,16 @@
 package com.example.filmapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
+
 import com.example.filmapp.databinding.ActivitySearchBinding;
+
 import java.util.List;
 
 public class SearchActivity extends AppCompatActivity {
@@ -25,13 +29,18 @@ public class SearchActivity extends AppCompatActivity {
 
         binding.btnBack.setOnClickListener(v -> finish());
 
-        showEmptyState();
-        setupSearch();
         setupRecyclerView();
+        setupSearch();
+        showEmptyState();
     }
 
     private void setupRecyclerView() {
-        adapter = new FilmAdapter(repository.getAllMovies(), movie -> {});
+        // FIX: tambah onClick untuk buka MovieDetailActivity
+        adapter = new FilmAdapter(repository.getAllMovies(), movie -> {
+            Intent intent = new Intent(this, MovieDetailActivity.class);
+            intent.putExtra(MovieDetailActivity.EXTRA_MOVIE_ID, movie.getId());
+            startActivity(intent);
+        });
         binding.rvSearchResults.setLayoutManager(new GridLayoutManager(this, 2));
         binding.rvSearchResults.setAdapter(adapter);
     }

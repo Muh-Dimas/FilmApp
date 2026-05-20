@@ -20,6 +20,8 @@ import java.util.List;
 
 public class HomeFragment extends Fragment {
 
+    private static final int REQUEST_ADD_FILM = 100;
+
     private FragmentHomeBinding binding;
     private MovieRepository repository;
     private FilmAdapter trendingAdapter, popularAdapter, newAdapter;
@@ -72,7 +74,6 @@ public class HomeFragment extends Fragment {
             populateAdapters();
             return;
         }
-
         showLoading(true);
         showRetry(false);
         retryCount = 0;
@@ -141,23 +142,25 @@ public class HomeFragment extends Fragment {
     }
 
     private void setupClickListeners() {
-        // Tombol search
         binding.btnSearch.setOnClickListener(v ->
                 startActivity(new Intent(requireContext(), SearchActivity.class)));
 
-        // Tombol play featured banner
+        // ── Tombol tambah film ───────────────────────────────────────────────
+        binding.fabAddFilm.setOnClickListener(v -> {
+            Intent intent = new Intent(requireContext(), AddFilmActivity.class);
+            startActivityForResult(intent, REQUEST_ADD_FILM);
+        });
+
         binding.btnPlayFeatured.setOnClickListener(v -> {
             Movie featured = repository.getFeaturedMovie();
             if (featured != null) openDetail(featured);
         });
 
-        // Klik gambar featured banner
         binding.cardFeatured.setOnClickListener(v -> {
             Movie featured = repository.getFeaturedMovie();
             if (featured != null) openDetail(featured);
         });
 
-        // Lihat Semua — Trending
         binding.tvSeeAllTrending.setOnClickListener(v -> {
             Intent intent = new Intent(requireContext(), AllMoviesActivity.class);
             intent.putExtra(AllMoviesActivity.EXTRA_FILTER, "trending");
@@ -165,7 +168,6 @@ public class HomeFragment extends Fragment {
             startActivity(intent);
         });
 
-        // Lihat Semua — Popular
         binding.tvSeeAllPopular.setOnClickListener(v -> {
             Intent intent = new Intent(requireContext(), AllMoviesActivity.class);
             intent.putExtra(AllMoviesActivity.EXTRA_FILTER, "popular");
@@ -173,13 +175,23 @@ public class HomeFragment extends Fragment {
             startActivity(intent);
         });
 
-        // Lihat Semua — New Release
         binding.tvSeeAllNew.setOnClickListener(v -> {
             Intent intent = new Intent(requireContext(), AllMoviesActivity.class);
             intent.putExtra(AllMoviesActivity.EXTRA_FILTER, "new");
             intent.putExtra(AllMoviesActivity.EXTRA_TITLE, "Terbaru");
             startActivity(intent);
         });
+    }
+
+    // Reload setelah kembali dari AddFilmActivity
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_ADD_FILM && resultCode == getActivity().RESULT_OK) {
+            showLoading(true);
+            retryCount = 0;
+            loadFromApi(); // reload dari API karena cache sudah di-clear
+        }
     }
 
     private void openDetail(Movie movie) {

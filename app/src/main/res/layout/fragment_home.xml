@@ -285,7 +285,7 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Loading overlay — tampil di atas konten -->
+    <!-- Loading overlay -->
     <LinearLayout
         android:id="@+id/loading_progress"
         android:layout_width="match_parent"
@@ -352,5 +352,17 @@
             android:backgroundTint="@color/teal_primary"
             android:textColor="@color/bg_dark" />
     </LinearLayout>
+
+    <!-- FAB Tambah Film — pojok kanan bawah, di atas semua konten -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_add_film"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:src="@android:drawable/ic_input_add"
+        android:contentDescription="Tambah Film"
+        app:backgroundTint="@color/teal_primary"
+        app:tint="#FFFFFF" />
 
 </FrameLayout>

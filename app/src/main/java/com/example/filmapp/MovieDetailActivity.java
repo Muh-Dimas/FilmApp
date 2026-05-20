@@ -4,8 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.animation.AnimationUtils;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.bumptech.glide.Glide;
+import com.example.filmapp.controller.FilmController;
 import com.example.filmapp.databinding.ActivityMovieDetailBinding;
 
 public class MovieDetailActivity extends AppCompatActivity {
@@ -14,6 +18,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     private ActivityMovieDetailBinding binding;
     private Movie movie;
+    private FilmController filmController;
     private boolean isSynopsisExpanded = false;
 
     @Override
@@ -21,6 +26,8 @@ public class MovieDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMovieDetailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        filmController = new FilmController();
 
         String movieId = getIntent().getStringExtra(EXTRA_MOVIE_ID);
         MovieRepository repository = new MovieRepository();
@@ -110,7 +117,7 @@ public class MovieDetailActivity extends AppCompatActivity {
             }
         });
 
-        // Tombol Tonton Sekarang — buka trailer di PlayerActivity
+        // Tombol Tonton Sekarang
         binding.btnWatchNow.setOnClickListener(v -> {
             String trailerUrl = movie.getUrlTrailer();
             if (trailerUrl != null && !trailerUrl.isEmpty()) {
@@ -124,6 +131,45 @@ public class MovieDetailActivity extends AppCompatActivity {
                 overridePendingTransition(R.anim.fade_in, R.anim.slide_up);
             } else {
                 Toast.makeText(this, "Trailer tidak tersedia", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Tombol Hapus Film — tampilkan konfirmasi dulu
+        binding.btnDelete.setOnClickListener(v -> showDeleteConfirmation());
+    }
+
+    private void showDeleteConfirmation() {
+        new AlertDialog.Builder(this)
+                .setTitle("Hapus Film")
+                .setMessage("Yakin ingin menghapus \"" + movie.getTitle() + "\"?\nTindakan ini tidak bisa dibatalkan.")
+                .setPositiveButton("Hapus", (dialog, which) -> deleteFilm())
+                .setNegativeButton("Batal", null)
+                .show();
+    }
+
+    private void deleteFilm() {
+        // Tampilkan loading
+        binding.btnDelete.setEnabled(false);
+        binding.btnDelete.setText("Menghapus...");
+
+        filmController.deleteFilm(movie.getId(), new FilmController.DeleteFilmCallback() {
+            @Override
+            public void onSuccess() {
+                Toast.makeText(MovieDetailActivity.this,
+                        "\"" + movie.getTitle() + "\" berhasil dihapus",
+                        Toast.LENGTH_LONG).show();
+                MovieRepository.clearCache(); // refresh cache
+                setResult(RESULT_OK);
+                finish();
+            }
+
+            @Override
+            public void onFailure(String message) {
+                binding.btnDelete.setEnabled(true);
+                binding.btnDelete.setText("🗑 Hapus Film");
+                Toast.makeText(MovieDetailActivity.this,
+                        "Gagal menghapus: " + message,
+                        Toast.LENGTH_LONG).show();
             }
         });
     }

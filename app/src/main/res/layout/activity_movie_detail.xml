@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="@color/bg_dark">
 
-    <!-- Scrollable Content -->
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scroll_content"
         android:layout_width="match_parent"
@@ -23,7 +22,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="480dp">
 
-                <!-- Poster Image -->
                 <ImageView
                     android:id="@+id/img_poster"
                     android:layout_width="match_parent"
@@ -31,13 +29,12 @@
                     android:scaleType="centerCrop"
                     android:background="@color/bg_card" />
 
-                <!-- Gradient Overlay Bottom -->
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/bg_detail_overlay" />
 
-                <!-- Top Bar (Back + Actions) -->
+                <!-- Top Bar -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -47,7 +44,6 @@
                     android:padding="16dp"
                     android:paddingTop="48dp">
 
-                    <!-- Back Button -->
                     <ImageButton
                         android:id="@+id/btn_back"
                         android:layout_width="40dp"
@@ -62,7 +58,6 @@
                         android:layout_height="1dp"
                         android:layout_weight="1" />
 
-                    <!-- Favorite Button -->
                     <ImageButton
                         android:id="@+id/btn_favorite"
                         android:layout_width="40dp"
@@ -72,7 +67,6 @@
                         android:padding="8dp"
                         android:tint="@color/teal_primary" />
 
-                    <!-- Download Button -->
                     <ImageButton
                         android:id="@+id/btn_download"
                         android:layout_width="40dp"
@@ -92,7 +86,6 @@
                     android:orientation="vertical"
                     android:padding="20dp">
 
-                    <!-- Genre Badge -->
                     <TextView
                         android:id="@+id/tv_genre_badge"
                         android:layout_width="wrap_content"
@@ -107,7 +100,6 @@
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
-                    <!-- Movie Title -->
                     <TextView
                         android:id="@+id/tv_title"
                         android:layout_width="match_parent"
@@ -119,7 +111,6 @@
                         android:textStyle="bold"
                         android:lineSpacingMultiplier="1.1" />
 
-                    <!-- Meta Info Row -->
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -127,7 +118,6 @@
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
-                        <!-- Rating -->
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -151,7 +141,6 @@
                                 android:textStyle="bold" />
                         </LinearLayout>
 
-                        <!-- Separator -->
                         <View
                             android:layout_width="4dp"
                             android:layout_height="4dp"
@@ -160,7 +149,6 @@
                             android:background="@drawable/bg_circle_teal"
                             android:alpha="0.5" />
 
-                        <!-- Year -->
                         <TextView
                             android:id="@+id/tv_year"
                             android:layout_width="wrap_content"
@@ -169,7 +157,6 @@
                             android:textColor="@color/text_secondary"
                             android:textSize="14sp" />
 
-                        <!-- Separator -->
                         <View
                             android:layout_width="4dp"
                             android:layout_height="4dp"
@@ -178,7 +165,6 @@
                             android:background="@drawable/bg_circle_teal"
                             android:alpha="0.5" />
 
-                        <!-- Duration -->
                         <TextView
                             android:id="@+id/tv_duration"
                             android:layout_width="wrap_content"
@@ -197,13 +183,12 @@
                 android:orientation="vertical"
                 android:padding="20dp">
 
-                <!-- Stats Row (Rating, Episodes, Genre) -->
+                <!-- Stats Row -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <!-- Rating Card -->
                     <androidx.cardview.widget.CardView
                         android:layout_width="0dp"
                         android:layout_height="80dp"
@@ -240,7 +225,6 @@
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
-                    <!-- Episode Card -->
                     <androidx.cardview.widget.CardView
                         android:layout_width="0dp"
                         android:layout_height="80dp"
@@ -277,7 +261,6 @@
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
-                    <!-- Genre Card -->
                     <androidx.cardview.widget.CardView
                         android:layout_width="0dp"
                         android:layout_height="80dp"
@@ -339,7 +322,6 @@
                     android:maxLines="4"
                     android:ellipsize="end" />
 
-                <!-- Tombol Baca Selengkapnya -->
                 <TextView
                     android:id="@+id/tv_read_more"
                     android:layout_width="wrap_content"
@@ -349,7 +331,7 @@
                     android:textColor="@color/teal_primary"
                     android:textSize="13sp" />
 
-                <!-- Info Detail Tambahan -->
+                <!-- Informasi Film -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -375,7 +357,6 @@
                         android:orientation="vertical"
                         android:padding="4dp">
 
-                        <!-- Tahun Rilis -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="52dp"
@@ -408,7 +389,6 @@
                             android:layout_marginStart="16dp"
                             android:background="@color/glass_border" />
 
-                        <!-- Durasi -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="52dp"
@@ -441,7 +421,6 @@
                             android:layout_marginStart="16dp"
                             android:background="@color/glass_border" />
 
-                        <!-- Genre -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="52dp"
@@ -474,7 +453,6 @@
                             android:layout_marginStart="16dp"
                             android:background="@color/glass_border" />
 
-                        <!-- Rating -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="52dp"
@@ -507,7 +485,6 @@
                             android:layout_marginStart="16dp"
                             android:background="@color/glass_border" />
 
-                        <!-- Jumlah Episode -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="52dp"
@@ -536,6 +513,30 @@
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
+                <!-- ===== TOMBOL HAPUS FILM ===== -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    app:cardBackgroundColor="#1A1A1A"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="#4D2020"
+                    app:strokeWidth="1dp">
+
+                    <Button
+                        android:id="@+id/btnDelete"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:background="@android:color/transparent"
+                        android:text="🗑  Hapus Film"
+                        android:textColor="#FF5252"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.02" />
+
+                </androidx.cardview.widget.CardView>
+
             </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
@@ -550,7 +551,6 @@
         android:padding="16dp"
         android:paddingBottom="24dp">
 
-        <!-- Download Button -->
         <Button
             android:id="@+id/btn_download_action"
             android:layout_width="56dp"
@@ -560,7 +560,6 @@
             android:textColor="@color/teal_primary"
             android:textSize="18sp" />
 
-        <!-- Tonton Sekarang Button -->
         <Button
             android:id="@+id/btn_watch_now"
             android:layout_width="0dp"
